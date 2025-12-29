@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Part2.html</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+/* Core VS Code Markdown Styles (Preserved) */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif;
+    font-size: 14px;
+    padding: 0 26px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #333;
+}
+
+h1 { border-bottom: 2px solid #eaecef; padding-bottom: .3em; }
+h2 { border-bottom: 1px solid #eaecef; padding-bottom: .3em; margin-top: 2em; }
+code { font-family: Menlo, Monaco, Consolas, "Courier New", monospace; background-color: #f6f8fa; padding: 3px 6px; border-radius: 3px; }
+pre { background-color: #f6f8fa; padding: 16px; overflow: auto; border-radius: 3px; }
+blockquote { border-left: 4px solid #dfe2e5; color: #6a737d; padding: 0 1em; margin: 0; }
+
+/* NEW: Enhanced Table Styles for Comparison Sections */
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.comparison-table th {
+    background-color: #24292e;
+    color: white;
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #dfe2e5;
+}
+.comparison-table td {
+    padding: 12px;
+    border: 1px solid #dfe2e5;
+    vertical-align: top;
+}
+.comparison-table tr:nth-child(even) { background-color: #f8f9fa; }
+.comparison-table tr:hover { background-color: #f1f3f5; }
+
+/* Status Badges */
+.tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 11px; margin-right: 4px; }
+.tag-green { background: #d4edda; color: #155724; }
+.tag-red { background: #f8d7da; color: #721c24; }
+.tag-blue { background: #d1ecf1; color: #0c5460; }
+.tag-yellow { background: #fff3cd; color: #856404; }
+
+/* Section Headers */
+.section-header {
+    background: #f6f8fa;
+    padding: 10px;
+    border-left: 5px solid #0366d6;
+    margin-top: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Screen-reader only helper */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+</style>
+</head>
+<body>
+<main>
+<h3 id="31-engineering-grade-metrics-framework">3.1 Engineering-Grade Metrics Framework</h3>
+<p>Production-grade tool selection requires evaluation across 12 technical dimensions (not just &quot;speed&quot; or &quot;cost&quot;)[21]:</p>
+
+<h4 id="311-vendor-lock-in-risk-criticality-very-high">3.1.1 Vendor Lock-in Risk (Criticality: Very High)</h4>
+<p><strong>Definition</strong>: Can I export generated code and run it independent of the tool?</p>
+<table class="comparison-table" aria-label="Vendor lock-in risk comparison">
+  <caption class="sr-only">Vendor lock-in risk comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Lock-in Level</th>
+<th>Risk Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Medium</td>
+<td>Code is clean, but semantic index tied to Cursor; model switch costs context rebuilding</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Medium</td>
+<td>Same as Cursor; VS Code fork mitigates somewhat</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Low</td>
+<td>Pure text diffs, git-compatible; works with any LLM</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>High</td>
+<td>Generated code often references Copilot-specific patterns; no export mechanism</td>
+</tr>
+<tr>
+<td><strong>Bolt.new / v0.dev</strong></td>
+<td>Very High</td>
+<td>Code lives in proprietary backend; export = 80% rewrite</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>High</td>
+<td>Closed-source; no code export; vendor lock to Cognition</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Very Low</td>
+<td>Outputs plain markdown + git diffs; no runtime dependency</td>
+</tr>
+<tr>
+<td><strong>Genkit</strong></td>
+<td>Low</td>
+<td>Framework-level, but code is standard Node.js/Python; portable</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Medium</td>
+<td>Platform-dependent; artifacts tied to Antigravity workspace (for now)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Recommendation</strong>: For production, prefer tools with <strong>low lock-in</strong> (Aider, Conductor, Genkit).</p>
+<hr>
+
+<h4 id="312-tech-stack-agnosticism-criticality-high">3.1.2 Tech Stack Agnosticism (Criticality: High)</h4>
+<p><strong>Definition</strong>: Can the tool work with any framework/language, or does it force specific choices?</p>
+<table class="comparison-table" aria-label="Tech stack agnosticism comparison">
+  <caption class="sr-only">Tech stack agnosticism comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Language Support</th>
+<th>Framework Flexibility</th>
+<th>Mobile Support</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>30+</td>
+<td>Excellent (any stack)</td>
+<td>Limited</td>
+<td>Can refactor Kotlin, Go, etc.</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>30+</td>
+<td>Excellent</td>
+<td>Limited</td>
+<td>Cascade works framework-agnostic</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>30+</td>
+<td>Excellent (any stack)</td>
+<td>Via CLI</td>
+<td>No IDE, but works anywhere</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>30+</td>
+<td>Good</td>
+<td>Limited</td>
+<td>Biased toward JavaScript/Python</td>
+</tr>
+<tr>
+<td><strong>Bolt.new</strong></td>
+<td>JavaScript (Next.js)</td>
+<td>Poor</td>
+<td>No</td>
+<td>Forces React/Tailwind stack</td>
+</tr>
+<tr>
+<td><strong>v0.dev</strong></td>
+<td>React/TypeScript</td>
+<td>Poor</td>
+<td>No</td>
+<td>Shadcn/Next.js lock-in</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>30+</td>
+<td>Excellent</td>
+<td>Android/iOS possible</td>
+<td>Terminal-based, fully portable</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>30+</td>
+<td>Excellent</td>
+<td>Not yet</td>
+<td>Agnostic to tech choices</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>30+</td>
+<td>Excellent</td>
+<td>Possible</td>
+<td>Spec-driven = framework-agnostic</td>
+</tr>
+<tr>
+<td><strong>Genkit</strong></td>
+<td>Multiple</td>
+<td>Framework-agnostic (backend)</td>
+<td>Yes</td>
+<td>Works with any backend framework</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>30+</td>
+<td>Excellent</td>
+<td>Not yet</td>
+<td>Multi-model support helps diversity</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Verdict</strong>: <strong>Aider, Claude Code, Conductor, Genkit</strong> are true polyglots. Avoid Bolt/v0 if you have existing tech debt.</p>
+<hr>
+
+<h4 id="313-ide-%22round-tripping%22-criticality-high">3.1.3 IDE &quot;Round-Tripping&quot; (Criticality: High)</h4>
+<p><strong>Definition</strong>: If I manually edit code in my IDE, does the AI instantly see the changes and adapt? Or does the context get stale?</p>
+<p><strong>Scenario</strong>:</p>
+<ol>
+<li>AI generates auth middleware</li>
+<li>Developer manually adds error logging to one file</li>
+<li>AI immediately uses updated code for next suggestion (no refresh needed)</li>
+</ol>
+<table class="comparison-table" aria-label="IDE round-tripping comparison">
+  <caption class="sr-only">IDE round-tripping comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Round-Trip Capability</th>
+<th>Context Staleness Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Excellent (real-time indexing)</td>
+<td>Low—changes visible in &lt;1s</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Excellent (real-time flow sync)</td>
+<td>Low—&quot;Flow&quot; syncs instantly</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Good (reads on each turn)</td>
+<td>Medium—requires manual refresh</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>Medium (ghost text, but limited context refresh)</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Excellent (terminal watches files)</td>
+<td>Low—MCP integration keeps state fresh</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>Good (polls codebase)</td>
+<td>Medium—non-real-time</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Good (reads before each command)</td>
+<td>Medium—CLI-based</td>
+</tr>
+<tr>
+<td><strong>Genkit</strong></td>
+<td>Not applicable (framework, not IDE)</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Excellent (native integration)</td>
+<td>Low—editor/agent coupled</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Implication</strong>: For rapid iteration loops, <strong>Cursor/Windsurf/Claude Code</strong> are superior.</p>
+<hr>
+
+<h4 id="314-output-quality-criticality-high">3.1.4 Output Quality (Criticality: High)</h4>
+<p><strong>Definition</strong>: Does the tool provide clean, applicable code? Diffs? Snippets? Status messages?</p>
+<table class="comparison-table" aria-label="Output quality comparison">
+  <caption class="sr-only">Output quality comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Output Format</th>
+<th>Code Quality</th>
+<th>Applicability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Diffs + inline edits</td>
+<td>High (Claude-grade)</td>
+<td>Direct; few conflicts</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Diffs + block replacements</td>
+<td>High</td>
+<td>Direct; Cascade plans reduce rework</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Git diffs (semantically aware)</td>
+<td>High (model-dependent)</td>
+<td>Highest—designed for git</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>Inline suggestions + chat</td>
+<td>Medium (hallucination risk)</td>
+<td>Requires validation</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>Artifact-based (PRs, descriptions)</td>
+<td>Very High</td>
+<td>Direct (human-reviewed)</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Markdown plans + git diffs</td>
+<td>High</td>
+<td>Direct (plan-driven)</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Terminal output + file writes</td>
+<td>High (Claude 3.5+)</td>
+<td>Direct</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Artifacts + task lists</td>
+<td>Very High</td>
+<td>Direct (artifact-documented)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Best-in-class</strong>: Devin, Conductor, Antigravity (plan-driven + artifact outputs)</p>
+<hr>
+
+<h4 id="315-agent-capabilities-autonomy--tooling-criticality-very-high">3.1.5 Agent Capabilities: Autonomy &amp; Tooling (Criticality: Very High)</h4>
+<p><strong>Definition</strong>: Can the agent execute terminal commands, run tests, and self-heal based on errors?</p>
+<table class="comparison-table" aria-label="Agent capabilities comparison">
+  <caption class="sr-only">Agent capabilities comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Terminal Execution</th>
+<th>Test Integration</th>
+<th>Self-Healing</th>
+<th>Git Operations</th>
+<th>CI/CD Hookable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Limited (run in IDE)</td>
+<td>Manual</td>
+<td>No</td>
+<td>Limited</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Limited</td>
+<td>Manual</td>
+<td>No</td>
+<td>Limited</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Yes (subprocess)</td>
+<td>Yes (auto-lint)</td>
+<td>Yes (retry)</td>
+<td>Yes (auto-commit)</td>
+<td>Via CLI</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Yes (full bash)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Possible (custom wrapper)</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>Yes (sandboxed)</td>
+<td>Yes (comprehensive)</td>
+<td>Yes (multi-attempt)</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Yes (via Gemini CLI)</td>
+<td>Via plan specification</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Possible</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Evidence</strong>[1]: Devin can run a full test suite, interpret failures, and generate fixes autonomously—critical for large refactors.</p>
+<hr>
+
+<h4 id="316-multi-modal--multi-window-awareness-criticality-medium">3.1.6 Multi-Modal / Multi-Window Awareness (Criticality: Medium)</h4>
+<p><strong>Definition</strong>: Can the agent see multiple file tabs, terminal output, and browser previews simultaneously?</p>
+<table class="comparison-table" aria-label="Multi-modal and multi-window awareness comparison">
+  <caption class="sr-only">Multi-modal and multi-window awareness comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Multi-File Awareness</th>
+<th>Terminal Visibility</th>
+<th>Browser Preview</th>
+<th>Screenshots</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Yes (project-wide)</td>
+<td>Limited</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Yes (project-wide)</td>
+<td>Limited</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Yes (file-level)</td>
+<td>Yes (captured output)</td>
+<td>No</td>
+<td>Yes (images as input)</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Yes (full project)</td>
+<td>Yes (direct access)</td>
+<td>Possible</td>
+<td>Via URL input</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>Yes (full + execution)</td>
+<td>Yes (streaming logs)</td>
+<td>Yes (screenshots)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Yes (file-level)</td>
+<td>Yes (output captured)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Yes (cross-modal agents)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes (artifacts)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Production Implication</strong>: For full-stack development (UI + backend), <strong>Devin</strong> and <strong>Antigravity</strong> have structural advantages.</p>
+<hr>
+
+<h4 id="317-model-portability-criticality-high">3.1.7 Model Portability (Criticality: High)</h4>
+<p><strong>Definition</strong>: Can I swap the underlying model (GPT-4o → Claude 3.5 Sonnet → DeepSeek) without rewriting tool code?</p>
+<table class="comparison-table" aria-label="Model portability comparison">
+  <caption class="sr-only">Model portability comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Model Flexibility</th>
+<th>Swap Difficulty</th>
+<th>Recommended Models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Low (Claude/GPT-4 only)</td>
+<td>High—rebuild embeddings</td>
+<td>Claude 3.5, GPT-4o</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Low (Codeium backend)</td>
+<td>High</td>
+<td>Codeium models</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Very High (pluggable)</td>
+<td>Low—one flag change</td>
+<td>Claude, DeepSeek, GPT-4, local</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>None (OpenAI-locked)</td>
+<td>Impossible</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Low (Claude-only)</td>
+<td>N/A (Anthropic product)</td>
+<td>Claude 3.5+</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>None (Cognition-locked)</td>
+<td>Impossible</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Low (Gemini-only)</td>
+<td>Requires fork</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>Genkit</strong></td>
+<td>Very High (pluggable)</td>
+<td>Low—config change</td>
+<td>Gemini, Anthropic, OpenAI, local</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>High (multi-model at launch)</td>
+<td>Medium</td>
+<td>Gemini 3, Claude, GPT</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Cost Implication</strong>: If Gemini/Claude pricing spikes, Aider + Genkit allow rapid pivots to local/cheaper models.</p>
+<hr>
+
+<h4 id="318-latency--throughput-criticality-high">3.1.8 Latency &amp; Throughput (Criticality: High)</h4>
+<p><strong>Definition</strong>: How fast does the tool respond, and how many tokens/second can it generate?</p>
+<p><strong>Benchmark Scenario</strong> (Dec 2025)[4][22]:</p>
+<table class="comparison-table" aria-label="Latency and throughput model benchmark">
+  <caption class="sr-only">Latency and throughput model benchmark</caption>
+<thead>
+<tr>
+<th>Model</th>
+<th>Latency (to first token)</th>
+<th>Generation Speed</th>
+<th>Cost per 1M input/output tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gemini 3 Flash</strong></td>
+<td>~2-3s</td>
+<td>220 tok/s</td>
+<td>$0.50 / $3.00</td>
+</tr>
+<tr>
+<td><strong>Claude 3.5 Sonnet</strong></td>
+<td>~5-8s</td>
+<td>60 tok/s</td>
+<td>$3.00 / $22.50</td>
+</tr>
+<tr>
+<td><strong>Claude 3.7 Sonnet</strong></td>
+<td>~5-8s</td>
+<td>60 tok/s</td>
+<td>$3.00 / $22.50</td>
+</tr>
+<tr>
+<td><strong>OpenAI o1</strong></td>
+<td>~8-15s (thinking)</td>
+<td>Slower</td>
+<td>Premium ($15/$60 est.)</td>
+</tr>
+<tr>
+<td><strong>OpenAI GPT-4o</strong></td>
+<td>~3-5s</td>
+<td>100 tok/s</td>
+<td>$2.50 / $10.00</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3 (API)</strong></td>
+<td>~2-4s</td>
+<td>150 tok/s</td>
+<td>~$0.27 / $1.08</td>
+</tr>
+<tr>
+<td><strong>Ollama (local, GPU)</strong></td>
+<td>Varies</td>
+<td>30-100 tok/s (hardware-dependent)</td>
+<td>$0 (electricity)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Real-World Impact</strong>[4]:</p>
+<ul>
+<li><strong>Gemini 3 Flash</strong>: 15-second response time feels instantaneous</li>
+<li><strong>Claude 3.5</strong>: 45-second response time breaks developer flow state</li>
+<li><strong>Cost per intelligence point</strong>: Gemini 77% more cost-effective</li>
+</ul>
+
+<p><strong>SWE-Bench Performance</strong>[4]:</p>
+<ul>
+<li><strong>Gemini 3 Flash</strong>: 78.0%</li>
+<li><strong>Claude 3.5 Sonnet</strong>: 77.2%</li>
+<li><strong>Margin</strong>: 0.8 percentage points (statistically insignificant), but cost + speed heavily favors Gemini</li>
+</ul>
+
+<p><strong>Recommendation</strong>: For production volume workloads, <strong>Gemini 3 Flash</strong> as primary; <strong>Claude</strong> for complex reasoning tasks where quality &gt; speed.</p>
+<hr>
+
+
+<h4 id="319-cost-efficiency-criticality-very-high">3.1.9 Cost Efficiency (Criticality: Very High)</h4>
+<p><strong>Definition</strong>: Total cost of ownership including token consumption, seat licensing, and infrastructure.</p>
+<p><strong>Scenario Analysis: Development team processing 100M tokens/month</strong>[4][22]</p>
+<table class="comparison-table" aria-label="Cost efficiency comparison for 100M tokens per month">
+  <caption class="sr-only">Cost efficiency comparison for 100M tokens per month</caption>
+<thead>
+<tr>
+<th>Tool/Model</th>
+<th>Seat Cost</th>
+<th>Token Cost</th>
+<th>Infra Cost</th>
+<th>Total / Month</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gemini 3 Flash (Genkit)</strong></td>
+<td>$0</td>
+<td>$1,430</td>
+<td>Cloud Run: $200</td>
+<td><strong>$1,630</strong></td>
+<td>Lowest cost tier</td>
+</tr>
+<tr>
+<td><strong>Claude 3.5 (Aider CLI)</strong></td>
+<td>$0</td>
+<td>$18,500</td>
+<td>Minimal</td>
+<td><strong>$18,500</strong></td>
+<td>11x Gemini cost</td>
+</tr>
+<tr>
+<td><strong>Cursor (per-seat)</strong></td>
+<td>$200 × 10</td>
+<td>Included (token limits)</td>
+<td>Minimal</td>
+<td><strong>$2,000</strong></td>
+<td>Fixed seat model</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot (per-seat)</strong></td>
+<td>$150 × 10</td>
+<td>Included</td>
+<td>Minimal</td>
+<td><strong>$1,500</strong></td>
+<td>Cheapest per-seat</td>
+</tr>
+<tr>
+<td><strong>Vertex AI (deployment)</strong></td>
+<td>$0</td>
+<td>$2,000</td>
+<td>$18,000/mo</td>
+<td><strong>$20,000+</strong></td>
+<td>Enterprise only</td>
+</tr>
+<tr>
+<td><strong>Devin SaaS</strong></td>
+<td>Unclear</td>
+<td>Included</td>
+<td>None</td>
+<td><strong>$5,000+/mo (est.)</strong></td>
+<td>Closed pricing</td>
+</tr>
+<tr>
+<td><strong>Aider + DeepSeek (local)</strong></td>
+<td>$0</td>
+<td>$0</td>
+<td>GPU: $5,000 (capital) + $500/mo</td>
+<td><strong>$500/mo</strong></td>
+<td>Best for &gt;500M tokens/mo</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Break-Even Analysis</strong>:</p>
+<ul>
+<li><strong>Local GPU cluster</strong>: Pay off capital in ~10 months if &gt;500M tokens/month traffic</li>
+<li><strong>Gemini API</strong>: Optimal for &lt;200M tokens/month</li>
+<li><strong>Claude</strong>: Only if reasoning quality non-negotiable (add 10-15% premium for quality)</li>
+</ul>
+<hr>
+
+<h4 id="3110-security--compliance-criticality-varies-by-domain">3.1.10 Security &amp; Compliance (Criticality: Varies by domain)</h4>
+<p><strong>Definition</strong>: Data retention policies, on-premise options, SOC 2 / ISO 27001 compliance, code visibility to vendors</p>
+<table class="comparison-table" aria-label="Security and compliance comparison">
+  <caption class="sr-only">Security and compliance comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>On-Premise</th>
+<th>Data Retention</th>
+<th>SOC 2</th>
+<th>Compliance Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>No</td>
+<td>Cloud (unclear)</td>
+<td>No</td>
+<td>Embedding index in proprietary servers</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>Yes (local)</td>
+<td>Local only</td>
+<td>N/A</td>
+<td>Code never leaves machine (default)</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>No</td>
+<td>30 days (after deletion)</td>
+<td>Yes</td>
+<td>Microsoft maintains; some enterprise shielding</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Possible (via MCP)</td>
+<td>Anthropic policies</td>
+<td>Yes</td>
+<td>SOC 2 Type II compliant</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>No</td>
+<td>Cognition policies</td>
+<td>Unclear</td>
+<td>Closed source; audit unclear</td>
+</tr>
+<tr>
+<td><strong>Genkit (Cloud Run)</strong></td>
+<td>Yes (self-hosted)</td>
+<td>Your control</td>
+<td>Yes (if using GCP)</td>
+<td>Fully portable; no vendor lock-in for data</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Yes (CLI local)</td>
+<td>Git-local</td>
+<td>No</td>
+<td>Data stays in repo</td>
+</tr>
+<tr>
+<td><strong>Vertex AI</strong></td>
+<td>Possible</td>
+<td>GCP controls</td>
+<td>Yes (GCP SOC 2)</td>
+<td>Enterprise SLA available</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>No</td>
+<td>Google policies</td>
+<td>Likely yes</td>
+<td>Preview: compliance TBD</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Critical Concern</strong>: Many tools process code through cloud APIs; <strong>PII/IP leakage possible</strong> if not careful.</p>
+<p><strong>Mitigation</strong>: For sensitive codebases, use <strong>Aider + local models</strong> or <strong>Genkit self-hosted</strong>.</p>
+<hr>
+
+<h4 id="3111-brownfield-codebase-support-criticality-very-high">3.1.11 Brownfield Codebase Support (Criticality: Very High)</h4>
+<p><strong>Definition</strong>: How well does the tool work in legacy, large, complex codebases?</p>
+<p><strong>Test Case</strong>: 300k LOC Rust codebase (BAML), first-time user, complex bug fix[2]</p>
+<table class="comparison-table" aria-label="Brownfield codebase support comparison">
+  <caption class="sr-only">Brownfield codebase support comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Success Rate</th>
+<th>Time to First Fix</th>
+<th>Context Challenge</th>
+<th>Hallucination Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>~60%</td>
+<td>2-3 hours</td>
+<td>Project index good, but lacks domain semantics</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Aider (without research)</strong></td>
+<td>~40%</td>
+<td>4-6 hours</td>
+<td>Single-file focus; misses architecture</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Aider + Research phase</strong></td>
+<td>~85%</td>
+<td>2-3 hours (research) + 1-2 hours (impl)</td>
+<td>Excellent (research maps dependencies)</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>~70%</td>
+<td>2-3 hours</td>
+<td>File structure good; dependency tracing ok</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>~80%</td>
+<td>1-2 hours</td>
+<td>Deep Wiki provides architecture understanding</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>~85%</td>
+<td>1 hour (setup interview) + 1-2 hours (impl)</td>
+<td>Reverse-engineers conventions; excellent for team consistency</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Naïve AI (no context engineering)</strong></td>
+<td>&lt;20%</td>
+<td>8+ hours</td>
+<td>Context flooded; repeated misunderstandings</td>
+<td>Very High</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Evidence</strong>[2]:</p>
+<ul>
+<li>BAML bug fix (300k LOC) with Conductor: Single-pass approval 24h later</li>
+<li>Aider without research: Developers often restart session after losing context (45-60 min wasted per attempt)</li>
+</ul>
+
+<p><strong>Key Insight</strong>: <strong>Context engineering matters more than model choice for brownfield work.</strong></p>
+<hr>
+
+<h4 id="3112-team-collaboration-features-criticality-medium-high-for-large-teams">3.1.12 Team Collaboration Features (Criticality: Medium-High for large teams)</h4>
+<p><strong>Definition</strong>: Can multiple developers work simultaneously using the same AI context?</p>
+<table class="comparison-table" aria-label="Team collaboration features comparison">
+  <caption class="sr-only">Team collaboration features comparison</caption>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Real-Time Collab</th>
+<th>Async Shared Context</th>
+<th>Code Review Integration</th>
+<th>Handoff Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Limited (no native)</td>
+<td>Via git only</td>
+<td>No native integration</td>
+<td>Via git branches</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Limited</td>
+<td>Via git only</td>
+<td>No</td>
+<td>Via git branches</td>
+</tr>
+<tr>
+<td><strong>Aider</strong></td>
+<td>No</td>
+<td>Via git commits + session files</td>
+<td>Via PR tools</td>
+<td>Git-based</td>
+</tr>
+<tr>
+<td><strong>GitHub Copilot</strong></td>
+<td>No</td>
+<td>Implicitly via GitHub</td>
+<td>Yes (Copilot in PR)</td>
+<td>Native to GitHub</td>
+</tr>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>No</td>
+<td>Via Git + agents.md/claude.md</td>
+<td>Via PR</td>
+<td>Git-based</td>
+</tr>
+<tr>
+<td><strong>Devin</strong></td>
+<td>Limited</td>
+<td>Slack integration</td>
+<td>Yes</td>
+<td>Slack thread-based</td>
+</tr>
+<tr>
+<td><strong>Conductor</strong></td>
+<td>Excellent (shared markdown specs)</td>
+<td><strong>Yes—core design</strong></td>
+<td>Via git diffs</td>
+<td>Git-committed specs inherited</td>
+</tr>
+<tr>
+<td><strong>Genkit</strong></td>
+<td>No (team via standard collab)</td>
+<td>Via git + code comments</td>
+<td>Via git workflow</td>
+<td>Standard dev workflow</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Possible (preview unclear)</td>
+<td>Via shared workspaces</td>
+<td>Possible</td>
+<td>Artifact-based review</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Best for Teams</strong>: <strong>Conductor</strong> (specs in git = instant team sync); <strong>Genkit</strong> (standard dev workflows)</p>
+<hr>
+</main>
+</body>
+</html>
