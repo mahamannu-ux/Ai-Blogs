@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Viewer</title>
+    <style>
+        /* Optional: Makes the text look like a code block */
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap; /* Keeps text inside the box if it's too long */
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <pre id="prompt-1">
+Role: Act as a CTO and Principal Software Architect leading a technical audit for a software technology strategy report.
+Target Audience: A technical team of 10-200 developers working on a mix of Greenfield (clean slate) and Brownfield (legacy) projects.
+Objective: Produce a comprehensive, 30-50 page "State of AI Software Development" report. The report must be highly technical, fluff-free, and designed for production-grade decision-making. It must balance summarizing external analysis with original critical synthesis.
+Output Requirements:
+Format: Rich Professional Report (Do not output as a simple Markdown file). The output should be structured as a formal whitepaper or technical audit document.
+Visuals: High Priority. You must extract and embed relevant diagrams, architectural schemas, and screenshots from the provided YouTube videos and web sources. If direct embedding is not possible, provide precise timestamps and descriptions for where visuals should be placed.
+Citations: CRITICAL: Use inline citations (e.g., [Source: Latent Space Podcast], [Source: Google IO 2024]) strictly so this report can be fed into NotebookLM for RAG and image generation.
+Primary Research Source Material: You are required to ingest and synthesize insights from the specific URL list provided at the bottom of this prompt (Newsletters, Podcasts, YouTube Technical Deep Dives, and GitHub repos).
+
+Section 1: The Landscape, Taxonomy & Evolution
+Focus: A rigorous breakdown of the ecosystem beyond "Chatbots" and "Vibe Coding."
+1. The Taxonomy: Categorize the current ecosystem into these distinct technical verticals:
+In-IDE Assistants: (e.g., GitHub Copilot, JetBrains AI, Gemini Code Assist). Focus on context awareness within the host IDE.
+AI-Native Editors: (e.g., Cursor, Windsurf/Codeium). Focus on how they fork VS Code and alter the editing loop.
+CLI & Terminal Tools: (e.g., Aider, Warp, Gemini CLI). Focus on "headless" coding and shell integration.
+Autonomous/Agentic Frameworks: (e.g., Devin, OpenHands, AutoGPT for code). Focus on agent loops, planning, and tool use.
+Local/Open Source Models: (e.g., Ollama, DeepSeek Coder, CodeLlama workflows). Focus on privacy and offline capabilities.
+2. The Evolution & Usage:
+Trajectory: Analyze the progression of AI coding usage based on the provided source: https://youtu.be/MI83buT_23o.
+The "Starter" Trap: Critically analyze tools like Bolt.new, Zapier, v0.dev, and Lovable.
+Acknowledge their utility for rapid prototyping.
+The Problem: Detail why these are unfit for professional teams (e.g., vendor lock-in, proprietary backends, lack of CI/CD integration, inability to handle complex state management, inability to export clean code to existing repos).
+The "Pro" Shift: Define "High Quality Vibe Engineering" for professional teams using tools like Cursor, Windsurf, and custom Agentic workflows.
+Section 2: Deep Dive - The Google Ecosystem Strategy
+Context: The team is currently leaning towards this stack. Provide a ruthless, detailed analysis.
+The Suite: Analyze and differentiate:
+Google AI Studio: (Prototyping/Prompt Engineering).
+Vertex AI Studio: (Enterprise deployment/Safety/Scale).
+Firebase Genkit & Studio: (Integration).
+Gemini CLI & Extensions: (Developer workflow).
+Google Conductor: (Analyze recent updates/announcements regarding this).
+Antigravity (Project IDX): Deep dive into its architecture—is it ready for production?
+Decision Matrix: Create a detailed table (min 10 metrics) comparing these Google tools against each other. Scenarios should include: "Greenfield MVP," "Brownfield Refactor," "Enterprise Security Compliance," and "Team Collaboration."
+Agentic Development: Detail how to use Google’s Agent Development Kit (ADK) to build agents that handle large chunks of development (e.g., "Write the entire auth module"). Assume the reader is familiar with the ADK docs.
+Section 3: Technical Metrics & Architecture Comparison
+Philosophy: Comparison must be from a Software Engineering perspective. The following list is not exhaustive; expand upon it with other critical engineering metrics.
+Core Engineering Metrics:
+Vendor Lock-in: Does it tie generated code to a proprietary runtime/backend?
+Tech Stack Agnosticism: Does it force specific frameworks (e.g., Next.js only) or support any stack (Kotlin/Android, Python, Go)?
+IDE "Round-Tripping": Can I edit code manually in VS Code and have the AI pick up the changes instantly, or does the sync break?
+Output Quality: Does it provide copy-paste snippets, apply diffs directly, or just output status messages?
+Agent Capabilities: Can it execute terminal commands, run tests, and self-heal based on stderr output?
+Multi-Modal/Window: Can it see multiple terminal tabs, browser localhost previews, and the editor simultaneously?
+Operational Metrics:
+Model Portability: Can I swap the underlying model (e.g., switch from GPT-4o to Claude 3.5 Sonnet or a Local LLM) within the tool?
+Latency & Speed: Inference speed vs. Quality trade-offs.
+Cost Efficiency: Analysis of Token consumption, Session costs, and seat pricing.
+Security & Compliance: Data retention policies and on-premise options.
+Section 4: Advanced Context Engineering & Challenges
+Focus: Moving beyond the "Context Window" marketing numbers.
+The Challenge: Analyze "State, Memory, and Session" in long-running coding tasks.
+Solutions & Patterns:
+Synthesize techniques from the provided GitHub resource: humanlayer/advanced-context-engineering-for-coding-agents.
+Google Specifics: Best practices for caching context in Gemini 1.5 Pro to reduce latency and cost in developer workflows.
+Comparison: If Claude 3.5 Sonnet or OpenAI o1 offers a superior architectural approach to context (e.g., prompt caching, thinking steps) for specific coding tasks, highlight it.
+Dos and Don'ts: A pragmatic list of "Context Hygiene" for developers to prevent hallucination in large codebases.
+
+Source Material List (Must be analyzed)
+Newsletters & Blogs:
+Latent Space (latent.space)
+The Batch (deeplearning.ai)
+Interconnects.ai
+Import AI
+The Gradient
+Podcasts & Video Resources (Analyze for technical workflows):
+Evolution of AI Coding: https://youtu.be/MI83buT_23o
+Context Engineering: https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/ace-fca.md
+General Landscape & Technical Demos:
+https://www.youtube.com/watch?v=rgjF5o2Qjsc
+https://youtu.be/MLhAA9yguwM
+https://youtu.be/IoiHI7p12Ao
+https://youtu.be/JvosMkuNxF8
+https://youtu.be/7Dtu2bilcFs
+https://youtu.be/pP_dSNz_EdQ
+https://youtu.be/wVl6ZjELpBk
+https://youtu.be/rmvDxxNubIg
+https://youtu.be/WqZq8L-v9pA
+https://youtu.be/CqL5kB8pOfo
+https://www.youtube.com/watch?v=ZDKmdhVtIoE
+https://www.youtube.com/watch?v=rLu_3hpG0b8
+https://www.youtube.com/watch?v=-g1yKRo5XtY
+
+    </pre>
+      <button onclick="copyPrompt('prompt-1')">
+      Copy Prompt
+    </button>
+
+</body>
+</html>
