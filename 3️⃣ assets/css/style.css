@@ -53,3 +53,8 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+.copy-badge {
+  margin-top: 0.5rem;
+  color: #4ade80;
+  font-size: 0.85rem;
+}
